@@ -1,0 +1,7 @@
+sdkconfig.old
+
+# binary directory
+/build
+
+# clion project directory
+/.idea
