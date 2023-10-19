@@ -13,13 +13,13 @@
 
 int led_mode[4] = {LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF};
 gpio_num_t pins[4] = {
-        PIN_LED_WIFI,
-        PIN_LED_ETH,
-        PIN_LED_PROV,
-        PIN_LED_STATUS,
+        static_cast<gpio_num_t>(PIN_LED_WIFI),
+        static_cast<gpio_num_t>(PIN_LED_ETH),
+        static_cast<gpio_num_t>(PIN_LED_PROV),
+        static_cast<gpio_num_t>(PIN_LED_STATUS),
 };
 
-static void ledTask(void*)
+static void ledTask(void* p)
 {
     while (1) {
         // T1
@@ -62,7 +62,7 @@ void initLed(void) {
     for (int i = 0; i < 4; ++i) {
         gpio_reset_pin(pins[i]);
         gpio_set_direction(pins[i], GPIO_MODE_OUTPUT);
-        gpio_set_level(pins[i], 1);
+        gpio_set_level(pins[i], 0);
     }
 
     xTaskCreate(ledTask, "led_task", LED_TASK_STACK_SIZE, NULL, LED_TASK_STACK_PRIORITY, NULL);

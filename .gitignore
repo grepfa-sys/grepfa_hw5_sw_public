@@ -5,3 +5,6 @@ sdkconfig.old
 
 # clion project directory
 /.idea
+
+# certification files
+/certs/esp_secure_cert_data

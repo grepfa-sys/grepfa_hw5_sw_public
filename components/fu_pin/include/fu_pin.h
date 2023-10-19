@@ -14,10 +14,10 @@
 
 #define PIN_ETH_RST 7
 #define PIN_ETH_INT 9
-#define PIN_RTH_CS 10
-#define PIN_RTH_MOSI 11
-#define PIN_RTH_SCK 12
-#define PIN_RTH_MISO 13
+#define PIN_ETH_CS 10
+#define PIN_ETH_MOSI 11
+#define PIN_ETH_SCK 12
+#define PIN_ETH_MISO 13
 
 #define PIN_RLY_PH 14
 #define PIN_RLY_EN 21

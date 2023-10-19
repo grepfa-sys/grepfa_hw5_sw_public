@@ -1,5 +1,7 @@
 #pragma once
 
+#include <driver/gpio.h>
+
 class Relay {
 public:
     Relay(gpio_num_t pin, bool reverse = false);
@@ -25,13 +27,11 @@ typedef enum {
 
 class SimpleMotor{
 public:
-    SimpleMotor(Relay enable, Relay phase);
-
-    void setStatus(MOTOR_STATUS status);
-    MOTOR_STATUS getStatus();
+    static void setStatus(MOTOR_STATUS st);
+    static MOTOR_STATUS getStatus();
 
 private:
-    MOTOR_STATUS status;
-
+    static Relay en, ph;
+    static MOTOR_STATUS status;
 };
 
