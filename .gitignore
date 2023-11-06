@@ -8,3 +8,5 @@ sdkconfig.old
 
 # certification files
 /certs/esp_secure_cert_data
+
+*.bin
