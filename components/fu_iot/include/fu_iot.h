@@ -3,10 +3,6 @@
 #include <esp_err.h>
 #include <mqtt_client.h>
 
-#define IOT_SERVER_ENDPOINT "mqtts://mqtt.grepfa.com"
-
-#define DEVICE_NAME "test-device"
-
 #define SHADOW_REQUEST_TOPIC "$aws/things/%s/shadow/name/channels/update/delta"
 #define SHADOW_REPORT_TOPIC "$aws/things/%s/shadow/name/channels/update"
 

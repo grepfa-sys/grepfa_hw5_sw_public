@@ -6,6 +6,7 @@ static const char* TAG = "MQTT";
 #include <esp_log.h>
 #include <fu_cert.h>
 #include <fu_rly.h>
+#include <fu_nvs.h>
 #include "fu_iot.h"
 #include "ArduinoJson.h"
 
@@ -18,7 +19,7 @@ esp_err_t FuIoT::init() {
     esp_mqtt_client_config_t cfg = {
             .broker = {
                     .address = {
-                            .uri = IOT_SERVER_ENDPOINT
+                            .uri = FuNVS::GetBrokerEndpoint()
                     },
                     .verification = {
                             .certificate = FuCert::RootCA()
@@ -37,8 +38,8 @@ esp_err_t FuIoT::init() {
             }
     };
 
-    sprintf(reqTopic, SHADOW_REQUEST_TOPIC, DEVICE_NAME);
-    sprintf(reportTopic, SHADOW_REPORT_TOPIC, DEVICE_NAME);
+    sprintf(reqTopic, SHADOW_REQUEST_TOPIC, FuNVS::GetDeviceName());
+    sprintf(reportTopic, SHADOW_REPORT_TOPIC, FuNVS::GetDeviceName());
 
     client = esp_mqtt_client_init(&cfg);
     esp_mqtt_client_register_event(client, MQTT_EVENT_DATA, mqtt_data_handler, nullptr);
@@ -95,9 +96,6 @@ void FuIoT::mqtt_request_handler(const char *topic, const char *data) {
     esp_mqtt_client_publish(client, reportTopic, str.c_str(), str.length(), 1, 0);
     ESP_LOGI(TAG, "reported - %s", str.c_str());
 }
-
-
-
 
 void FuIoT::mqtt_disconnected_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     ESP_LOGW(TAG, "server disconnected");
