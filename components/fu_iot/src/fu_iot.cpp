@@ -14,6 +14,9 @@ esp_mqtt_client_handle_t FuIoT::client = nullptr;
 char FuIoT::reqTopic[512];
 char FuIoT::reportTopic[512];
 
+std::function<void()> FuIoT::HandlerDisconnected = [](){};
+std::function<void()> FuIoT::HandlerConnected = [](){};
+
 esp_err_t FuIoT::init() {
 
     esp_mqtt_client_config_t cfg = {
@@ -44,6 +47,8 @@ esp_err_t FuIoT::init() {
     client = esp_mqtt_client_init(&cfg);
     esp_mqtt_client_register_event(client, MQTT_EVENT_DATA, mqtt_data_handler, nullptr);
     esp_mqtt_client_register_event(client, MQTT_EVENT_DISCONNECTED, mqtt_disconnected_handler, nullptr);
+    esp_mqtt_client_register_event(client, MQTT_EVENT_CONNECTED, mqtt_connected_handler, nullptr);
+
     auto err = esp_mqtt_client_start(client);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "start mqtt fail");
@@ -99,4 +104,14 @@ void FuIoT::mqtt_request_handler(const char *topic, const char *data) {
 
 void FuIoT::mqtt_disconnected_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     ESP_LOGW(TAG, "server disconnected");
+    HandlerDisconnected();
+}
+
+void FuIoT::mqtt_connected_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
+    ESP_LOGI(TAG, "server connected");
+    HandlerConnected();
+}
+
+esp_err_t FuIoT::reconnect() {
+    return esp_mqtt_client_reconnect(client);
 }
