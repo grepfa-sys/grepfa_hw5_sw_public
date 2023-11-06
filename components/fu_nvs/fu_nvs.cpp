@@ -3,11 +3,11 @@
 
 const char* TAG = "config";
 
-grepfa_factory_config_t GrepfaNVS::factory_config = {};
-nvs_handle_t GrepfaNVS::factory_config_handler;
-nvs_handle_t GrepfaNVS::user_config_handler;
+grepfa_factory_config_t FuNVS::factory_config = {};
+nvs_handle_t FuNVS::factory_config_handler;
+nvs_handle_t FuNVS::user_config_handler;
 
-esp_err_t GrepfaNVS::Init() {
+esp_err_t FuNVS::Init() {
     esp_err_t err = nvs_open(GREPFA_FACTORY_CONFIG_NAMESPACE, NVS_READONLY, &factory_config_handler);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "open factory config fail");
@@ -44,4 +44,12 @@ esp_err_t GrepfaNVS::Init() {
     }
     factory_config.device_name[size] = '\0';
         return 0;
+}
+
+const char *FuNVS::GetBrokerEndpoint() {
+    return factory_config.broker_ep;
+}
+
+const char *FuNVS::GetDeviceName() {
+    return factory_config.device_name;
 }

@@ -16,11 +16,14 @@ typedef struct{
 } grepfa_factory_config_t;
 
 
-class GrepfaNVS{
+class FuNVS{
 private:
     static grepfa_factory_config_t factory_config;
     static nvs_handle_t factory_config_handler;
     static nvs_handle_t user_config_handler;
 public:
     static esp_err_t Init();
+
+    static const char* GetBrokerEndpoint();
+    static const char* GetDeviceName();
 };
