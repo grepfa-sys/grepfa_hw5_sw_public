@@ -12,17 +12,17 @@ dependencies:
       type: service
     version: 2.4.0
   grepfa_net:
-    component_hash: fc4b2cf288aad4bb848749e7132601b1b6e73d708a941c807f6042514ce5ece6
+    component_hash: 7ab276875c0502eeb9db093adbbdfdf71c0ec768f46e4c3aba199f16557a40d2
     source:
       git: https://github.com/GrepFa/grepfa_net.git
       path: components/grepfa_net
       type: git
-    version: b6c4ae6b36b2bc1cfb4f439039e73acf1503b18b
+    version: aba82b0cb766fbaf66c177668d55a7b3f1323555
   idf:
     component_hash: null
     source:
       type: idf
     version: 5.1.1
-manifest_hash: c489c504a94195378987d3a4dd24e18df1e225b93ed386e075dbc56cd184c616
+manifest_hash: c514118568558eb4815cf696e690c62b82c84b96a134f4474488c8a5853ce137
 target: esp32s3
 version: 1.0.0

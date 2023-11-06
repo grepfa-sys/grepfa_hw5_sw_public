@@ -1,6 +1,6 @@
 dependencies:
   grepfa_net:
-    version: "0.0.3"
+    version: "0.0.4"
     path: components/grepfa_net
     git: https://github.com/GrepFa/grepfa_net.git
   idf:
