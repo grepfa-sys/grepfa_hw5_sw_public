@@ -11,20 +11,13 @@ static const char* TAG = "SYSTEM";
 #include <fu_led.h>
 #include <fu_system.h>
 #include <fu_iot.h>
+#include <fu_nvs.h>
 
 void FuSystem::SystemInit() {
 
     // get system config
     ESP_LOGI(TAG, "system start");
     esp_err_t err;
-
-    ESP_LOGI(TAG, "get system configuration");
-    err = ConfigurationGetter();
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "System Configuration Manager Error Occurred");
-        esp_restart();
-    }
-    ESP_LOGI(TAG, "Get system settings");
 
     // critical system initialization
     err = CriticalBooting();
@@ -33,6 +26,14 @@ void FuSystem::SystemInit() {
         esp_restart();
     }
     ESP_LOGI(TAG, "System initialized");
+
+    ESP_LOGI(TAG, "get system configuration");
+    err = ConfigurationGetter();
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "System Configuration Manager Error Occurred");
+        esp_restart();
+    }
+    ESP_LOGI(TAG, "Get system settings");
 
     // net interface initialization
     err = NetworkingInitializer();
@@ -50,7 +51,12 @@ void FuSystem::SystemInit() {
 }
 
 esp_err_t FuSystem::ConfigurationGetter() {
-    // PASS
+    esp_err_t err = FuNVS::Init();
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Get NVS Fail");
+        return err;
+    }
+
     return ESP_OK;
 }
 
@@ -128,9 +134,22 @@ esp_err_t FuSystem::NetworkingConnect() {
 }
 
 esp_err_t FuSystem::IoTServerConnectionInitializer() {
-    FuIoT::init();
-    return 0;
+    FuIoT::HandlerConnected = [](){
+        setLedMode(LED_STATUS, LED_MODE_OFF);
+    };
+
+    FuIoT::HandlerDisconnected = [](){
+        setLedMode(LED_STATUS, LED_MODE_FAST_BLINK);
+        FuSystem::NetworkFixingAndRepairing();
+    };
+
+    return FuIoT::init();
 }
 
+esp_err_t FuSystem::NetworkFixingAndRepairing() {
+    vTaskDelay(500/portTICK_PERIOD_MS);
+    FuIoT::reconnect();
+    return 0;
+}
 
 
