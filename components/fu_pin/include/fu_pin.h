@@ -5,8 +5,8 @@
 #define PIN_LED_PROV 41
 #define PIN_LED_STATUS 42
 
-#define PIN_BTN_PROV 1
-#define PIN_BTN_RST 2
+#define PIN_BTN_PROV 2
+#define PIN_BTN_RST 1
 
 #define PIN_SW_OPEN 4
 #define PIN_SW_CLOSE 5

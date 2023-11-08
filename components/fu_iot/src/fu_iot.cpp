@@ -13,6 +13,8 @@ static const char* TAG = "MQTT";
 esp_mqtt_client_handle_t FuIoT::client = nullptr;
 char FuIoT::reqTopic[512];
 char FuIoT::reportTopic[512];
+char FuIoT::initAcceptTopic[512];
+char FuIoT::initReqTopic[512];
 
 std::function<void()> FuIoT::HandlerDisconnected = [](){};
 std::function<void()> FuIoT::HandlerConnected = [](){};
@@ -43,6 +45,8 @@ esp_err_t FuIoT::init() {
 
     sprintf(reqTopic, SHADOW_REQUEST_TOPIC, FuNVS::GetDeviceName());
     sprintf(reportTopic, SHADOW_REPORT_TOPIC, FuNVS::GetDeviceName());
+    sprintf(initAcceptTopic, SHADOW_INIT_ACCEPT_TOPIC, FuNVS::GetDeviceName());
+    sprintf(initReqTopic, SHADOW_INIT_REQUEST_TOPIC, FuNVS::GetDeviceName());
 
     client = esp_mqtt_client_init(&cfg);
     esp_mqtt_client_register_event(client, MQTT_EVENT_DATA, mqtt_data_handler, nullptr);
@@ -55,8 +59,10 @@ esp_err_t FuIoT::init() {
         return err;
     }
 
-    ESP_LOGI(TAG, "sub - %s", reqTopic);
-    esp_mqtt_client_subscribe(client, reqTopic, DEFAULT_QOS);
+//    esp_mqtt_client_subscribe(client, reqTopic, DEFAULT_QOS);
+//    esp_mqtt_client_subscribe(client, initAcceptTopic, DEFAULT_QOS);
+//    vTaskDelay(500/portTICK_PERIOD_MS);
+//    esp_mqtt_client_publish(client, initReqTopic, nullptr, 0, DEFAULT_QOS, 0);
 
     return ESP_OK;
 }
@@ -67,6 +73,8 @@ void FuIoT::mqtt_data_handler(void *handler_args, esp_event_base_t base, int32_t
 //    ESP_LOGI(TAG, "%s", event->topic);
 
     if (!strncmp(event->topic, reqTopic, event->topic_len)) {
+        mqtt_request_handler(event->topic, event->data);
+    } else if (!strncmp(event->topic, initAcceptTopic, event->topic_len)) {
         mqtt_request_handler(event->topic, event->data);
     }
 }
@@ -98,9 +106,12 @@ void FuIoT::mqtt_request_handler(const char *topic, const char *data) {
 
     ESP_LOGI(TAG, "%s", str.c_str());
 
-    esp_mqtt_client_publish(client, reportTopic, str.c_str(), str.length(), 1, 0);
+    esp_mqtt_client_publish(client, reportTopic, str.c_str(), str.length(), DEFAULT_QOS, 0);
     ESP_LOGI(TAG, "reported - %s", str.c_str());
 }
+
+
+
 
 void FuIoT::mqtt_disconnected_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     ESP_LOGW(TAG, "server disconnected");
@@ -109,6 +120,12 @@ void FuIoT::mqtt_disconnected_handler(void *handler_args, esp_event_base_t base,
 
 void FuIoT::mqtt_connected_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
     ESP_LOGI(TAG, "server connected");
+
+    esp_mqtt_client_subscribe(client, reqTopic, DEFAULT_QOS);
+    esp_mqtt_client_subscribe(client, initAcceptTopic, DEFAULT_QOS);
+    vTaskDelay(500/portTICK_PERIOD_MS);
+    esp_mqtt_client_publish(client, initReqTopic, nullptr, 0, DEFAULT_QOS, 0);
+
     HandlerConnected();
 }
 

@@ -1,0 +1,45 @@
+{
+  "state": {
+    "desired": {
+      "actuator-1": {
+        "state": -1.0
+      }
+    },
+    "reported": {
+      "actuator-1": {
+        "model": 1,
+        "state": 0,
+        "mode": 0
+      }
+    },
+    "delta": {
+      "actuator-1": {
+        "state": -1.0
+      }
+    }
+  },
+  "metadata": {
+    "desired": {
+      "actuator-1": {
+        "state": {
+          "timestamp": 1698754771
+        }
+      }
+    },
+    "reported": {
+      "actuator-1": {
+        "model": {
+          "timestamp": 1698754771
+        },
+        "state": {
+          "timestamp": 1698754771
+        },
+        "mode": {
+          "timestamp": 1698754771
+        }
+      }
+    }
+  },
+  "version": 1801,
+  "timestamp": 1699269741
+}

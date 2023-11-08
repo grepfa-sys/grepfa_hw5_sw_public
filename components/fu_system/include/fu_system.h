@@ -12,6 +12,8 @@ private:
     static esp_err_t NetworkingInitializer();
     static esp_err_t NetworkingConnect();
     static esp_err_t IoTServerConnectionInitializer();
-
     static esp_err_t NetworkFixingAndRepairing();
+    static void BtnRegister();
+
+    static void IRAM_ATTR BtnRtsHandler(void*);
 };
