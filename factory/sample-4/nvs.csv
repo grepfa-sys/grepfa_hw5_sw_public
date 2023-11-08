@@ -1,0 +1,6 @@
+key,type,encoding,value
+grepfa_factory,namespace,,
+broker_ep,data,string,mqtts://mqtt.grepfa.com
+device_name,data,string,sample-4
+
+grepfa_config,namespace,,
